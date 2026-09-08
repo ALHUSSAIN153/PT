@@ -2,6 +2,12 @@ import { ArrowUpRight } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
+// استيراد الصور برمجياً ليتكفل Vite بمعالجة المسار النهائي تلقائياً
+import img5 from "/5.avif";
+import img6 from "/6.avif";
+import img7 from "/7.avif";
+import img8 from "/8.avif";
+
 interface Project {
   title: string;
   image: string;
@@ -11,24 +17,24 @@ interface Project {
 const projectsData: Project[] = [
   {
     title: "Coursewise",
-    image: "/5.avif",
+    image: img5,
     bgClass: "bg-[#e2e4e7]",
   },
   {
     title: "LanderOS",
-    image: "/6.avif",
+    image: img6,
     bgClass:
       "bg-gradient-to-br from-purple-500/20 via-indigo-500/20 to-purple-400/10",
   },
   {
     title: "Alter",
-    image: "/7.avif",
+    image: img7,
     bgClass:
       "bg-gradient-to-br from-teal-900/40 via-emerald-800/30 to-cyan-900/40",
   },
   {
     title: "Portfoy",
-    image: "/8.avif",
+    image: img8,
     bgClass: "bg-gradient-to-br from-cyan-500/20 to-teal-500/10",
   },
 ];
@@ -56,7 +62,7 @@ const Hero = () => {
     window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
 
-    const starCount = window.innerWidth < 768 ? 50 : 100; // تقليل العدد في الهواتف لتحسين الأداء
+    const starCount = window.innerWidth < 768 ? 50 : 100;
     const stars: Star[] = [];
     const centerSafeZone = window.innerWidth < 768 ? 100 : 160;
 
@@ -248,39 +254,47 @@ function Row({ projects, reverse = false, speed = "40s" }: RowProps) {
           animationDuration: speed,
         }}
       >
-        {[...projects, ...projects].map((project, index) => (
-          <div
-            key={index}
-            className="group relative w-65 h-55 sm:w-95 sm:h-75 md:w-120 md:h-90 bg-neutral-900/40 rounded-lg p-2 sm:p-2.5 border border-white/5 shadow-2xl shrink-0 transition-all duration-500 hover:border-white/10"
-          >
+        {[...projects, ...projects].map((project, index) => {
+          // في حال كانت الصورة مساراً نصياً يبدأ بـ / ولم تُستورد عبر import، يتم دمج BASE_URL
+          const imageSrc =
+            typeof project.image === "string" && project.image.startsWith("/")
+              ? `${import.meta.env.BASE_URL}${project.image.slice(1)}`
+              : project.image;
+
+          return (
             <div
-              className={`relative h-40 sm:h-57.5 md:h-70 w-full rounded-lg overflow-hidden flex items-center justify-center p-3 sm:p-5 transition-transform duration-500 group-hover:scale-[0.99] ${project.bgClass}`}
+              key={index}
+              className="group relative w-65 h-55 sm:w-95 sm:h-75 md:w-120 md:h-90 bg-neutral-900/40 rounded-lg p-2 sm:p-2.5 border border-white/5 shadow-2xl shrink-0 transition-all duration-500 hover:border-white/10"
             >
-              <div className="absolute inset-0 bg-linear-to-br from-black/10 to-transparent opacity-40 pointer-events-none" />
+              <div
+                className={`relative h-40 sm:h-57.5 md:h-70 w-full rounded-lg overflow-hidden flex items-center justify-center p-3 sm:p-5 transition-transform duration-500 group-hover:scale-[0.99] ${project.bgClass}`}
+              >
+                <div className="absolute inset-0 bg-linear-to-br from-black/10 to-transparent opacity-40 pointer-events-none" />
 
-              <div className="relative w-full h-full rounded-lg overflow-hidden transition-transform duration-700 group-hover:scale-105 group-hover:-translate-y-1.5">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-full object-cover object-top"
-                />
+                <div className="relative w-full h-full rounded-lg overflow-hidden transition-transform duration-700 group-hover:scale-105 group-hover:-translate-y-1.5">
+                  <img
+                    src={imageSrc}
+                    alt={project.title}
+                    className="w-full h-full object-cover object-top"
+                  />
+                </div>
+              </div>
+
+              <div className="mt-1 sm:mt-2 flex items-center justify-between px-1 sm:px-2">
+                <h3 className="text-sm sm:text-[16px] font-semibold text-neutral-200 tracking-wide">
+                  {project.title}
+                </h3>
+
+                <div className="h-7 w-7 sm:h-9 sm:w-9 rounded-full flex items-center justify-center text-neutral-400 transition-all duration-300">
+                  <ArrowUpRight
+                    size={18}
+                    className="sm:w-6 sm:h-6 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 rtl:rotate-180"
+                  />
+                </div>
               </div>
             </div>
-
-            <div className="mt-1 sm:mt-2 flex items-center justify-between px-1 sm:px-2">
-              <h3 className="text-sm sm:text-[16px] font-semibold text-neutral-200 tracking-wide">
-                {project.title}
-              </h3>
-
-              <div className="h-7 w-7 sm:h-9 sm:w-9 rounded-full flex items-center justify-center text-neutral-400 transition-all duration-300">
-                <ArrowUpRight
-                  size={18}
-                  className="sm:w-6 sm:h-6 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 rtl:rotate-180"
-                />
-              </div>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

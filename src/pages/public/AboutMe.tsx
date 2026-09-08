@@ -5,6 +5,8 @@ import { ArrowUpRight, Cpu, Code2 } from "lucide-react";
 import { motion, type Variants } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
+import img5 from "/5.jpeg";
+
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -231,7 +233,7 @@ export default function AboutMe() {
               transition={{ duration: 0.4 }}
             >
               <img
-                src="/5.jpeg"
+                src={img5}
                 alt="Alhussain"
                 className="h-full w-full object-cover filter grayscale contrast-125 brightness-90 group-hover:grayscale-0 transition-all duration-500"
               />

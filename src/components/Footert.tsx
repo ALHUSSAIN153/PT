@@ -3,6 +3,10 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, ArrowUpLeft } from "lucide-react";
 import i18n from "../localization/i18n"; // قم بتعديل المسار حسب مكان المكون
 
+import img1 from "/1.png";
+import img2 from "/4.png";
+
+
 const Footer = () => {
   const { t } = useTranslation();
   const isRtl = i18n.language === "ar";
@@ -55,7 +59,7 @@ const Footer = () => {
               <div className="relative w-130 h-130">
                 {/* Background Image */}
                 <img
-                  src="/4.png"
+                  src={img2}
                   alt=""
                   className="absolute inset-0 w-full h-full object-cover z-10"
                 />
@@ -275,7 +279,7 @@ const Footer = () => {
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 overflow-hidden rounded-full border border-yellow-500/20">
               <img
-                src="/1.png"
+                src={img1}
                 alt="Oman Flag"
                 className="w-full h-full object-cover shadow drop-shadow-[1px_1px_20px_rgba(234,179,8,0.3)]"
               />

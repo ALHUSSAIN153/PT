@@ -1,4 +1,5 @@
 // src/pages/portfolio/ProjectDetails.tsx
+import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -20,8 +21,12 @@ export default function ProjectDetails() {
   const { t, i18n } = useTranslation();
   const { id } = useParams<{ id: string }>();
 
-  // تحديد اتجاه الصفحة ونوع السهم بناءً على اللغة الحالية
-  const isRtl = i18n.language === "ar";
+  // التمرير لأعلى الصفحة تلقائياً عند تغيير id المشروع
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [id]);
+
+  const isRtl = i18n.dir() === "rtl";
   const BackArrowIcon = isRtl ? ArrowRight : ArrowLeft;
 
   const currentProject = projectsDatabase[id || "1"] || projectsDatabase["1"];
@@ -29,7 +34,6 @@ export default function ProjectDetails() {
     .filter((p) => p.id !== currentProject.id)
     .slice(0, 3);
 
-  // ميزات القالب
   const sharedFeatures = [
     {
       title: t("pages.projectDetails.features.saasReadyTitle"),
@@ -48,7 +52,6 @@ export default function ProjectDetails() {
     },
   ];
 
-  // المواصفات الفنية
   const sharedSpecs = [
     { label: t("pages.projectDetails.specs.designFrameworks"), value: "Tailwind CSS", icon: <Code className="w-4 h-4" /> },
     { label: t("pages.projectDetails.specs.reactVersion"), value: "React 19", icon: <Laptop className="w-4 h-4" /> },
@@ -58,7 +61,6 @@ export default function ProjectDetails() {
     { label: t("pages.projectDetails.specs.environmentState"), value: t("pages.projectDetails.specs.productionReady"), icon: <Globe className="w-4 h-4" /> },
   ];
 
-  // التراخيص
   const licensesData = [
     {
       type: t("pages.projectDetails.licenses.commercial"),
@@ -114,7 +116,7 @@ export default function ProjectDetails() {
           {/* قسم التفاصيل والوصف */}
           <div className="lg:col-span-7 flex flex-col gap-5 sm:gap-6">
             <div>
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-2 sm:mb-3 leading-tight sm:leading-tight">
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-2 sm:mb-3 leading-tight">
                 {t(currentProject.titleKey)}
               </h1>
               {currentProject.versionKey && (
@@ -153,7 +155,7 @@ export default function ProjectDetails() {
             </div>
           </div>
 
-          {/* صندوق اختيار التراخيص (مثبت عند التمرير في الشاشات الكبيرة) */}
+          {/* صندوق اختيار التراخيص */}
           <div className="lg:col-span-5 flex flex-col gap-4 bg-zinc-900/40 border border-zinc-800/80 p-5 sm:p-6 rounded-2xl backdrop-blur-md lg:sticky lg:top-28">
             <h3 className="text-base sm:text-lg font-bold text-white border-b border-zinc-800/80 pb-3">
               {t("pages.projectDetails.chooseLicense")}
@@ -181,7 +183,7 @@ export default function ProjectDetails() {
 
                   <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto border-t sm:border-t-0 border-zinc-800/60 pt-3 sm:pt-0 shrink-0">
                     <span className="text-xl sm:text-2xl font-black text-white">{lic.price}</span>
-                    <button className="bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white text-xs sm:text-xs font-semibold px-4 py-2 rounded-lg transition-all shadow-md shadow-indigo-600/20 cursor-pointer">
+                    <button className="bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all shadow-md shadow-indigo-600/20 cursor-pointer">
                       {lic.buttonText}
                     </button>
                   </div>
@@ -247,7 +249,7 @@ export default function ProjectDetails() {
               {relatedProjects.map((project) => (
                 <Link
                   key={project.id}
-                  to={`/portfolio/${project.id}`}
+                  to={`/project/${project.id}`}
                   className="group overflow-hidden rounded-2xl border border-zinc-800/90 bg-zinc-900/40 transition-all duration-300 hover:-translate-y-1 hover:border-zinc-700/80 flex flex-col h-full"
                 >
                   <div className="overflow-hidden aspect-16/10 bg-zinc-950">

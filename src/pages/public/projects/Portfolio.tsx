@@ -11,6 +11,10 @@ import { projectsData } from "../../../data/portfolioData";
 
 type FilterType = "all" | "web" | "design";
 
+interface PortfolioSectionProps {
+  showNavigation?: boolean; // إمكانية التحكم بإخفاء/إظهار الهيدر والفوتر إذا تم تضمينه في صفحة هبوط
+}
+
 const gridVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -28,9 +32,10 @@ const cardVariants: Variants = {
   },
 };
 
-export default function PortfolioSection() {
-  const { t } = useTranslation();
+export default function PortfolioSection({ showNavigation = true }: PortfolioSectionProps) {
+  const { t, i18n } = useTranslation();
   const [filter, setFilter] = useState<FilterType>("all");
+  const isRtl = i18n.dir() === "rtl";
 
   const filteredProjects =
     filter === "all"
@@ -38,13 +43,13 @@ export default function PortfolioSection() {
       : projectsData.filter((p) => p.categoryKey === filter);
 
   return (
-    <div className="min-h-screen text-slate-100 font-sans bg-[#030303] overflow-x-hidden flex flex-col justify-between">
-      <Header />
+    <div className="min-h-screen text-slate-100 font-sans bg-[#030303] overflow-x-hidden flex flex-col justify-between relative">
+      {showNavigation && <Header />}
 
-      {/* خلفية الإضاءة البصرية المتجاوبة */}
+      {/* خلفية الإضاءة البصرية */}
       <div className="absolute top-16 left-1/2 -translate-x-1/2 w-72 h-72 sm:w-96 sm:h-96 md:w-120 md:h-120 bg-indigo-500/10 rounded-full blur-[100px] sm:blur-[150px] pointer-events-none z-0" />
 
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 md:pt-36 pb-16 sm:pb-24 grow w-full">
+      <main className={`relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24 grow w-full ${showNavigation ? 'pt-24 sm:pt-32 md:pt-36' : 'pt-12'}`}>
         
         {/* قسم العنوان والوصف */}
         <div className="flex flex-col items-center text-center mb-8 sm:mb-12">
@@ -127,11 +132,11 @@ export default function PortfolioSection() {
             className="w-full sm:w-auto flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs sm:text-sm px-6 sm:px-7 py-2.5 sm:py-3.5 rounded-full shadow-lg shadow-indigo-600/20 hover:shadow-indigo-500/30 transition-all duration-200 mt-2 sm:mt-0"
           >
             <span>{t("pages.portfolio.contactMe")}</span>
-            <ArrowUpRight className="w-4 h-4 rtl:rotate-90" />
+            <ArrowUpRight className={`w-4 h-4 ${isRtl ? "-scale-x-100" : ""}`} />
           </motion.button>
         </div>
 
-        {/* شبكة عرض المشاريع المتجاوبة */}
+        {/* شبكة عرض المشاريع */}
         <motion.div
           layout
           variants={gridVariants}
@@ -162,7 +167,7 @@ export default function PortfolioSection() {
                   >
                     <img
                       src={project.mainImage}
-                      alt={project.titleKey}
+                      alt={t(project.titleKey)}
                       className="w-[90%] h-[90%] object-cover rounded-lg shadow-2xl transition-transform duration-500 group-hover:scale-[1.03]"
                     />
                     <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300" />
@@ -179,7 +184,7 @@ export default function PortfolioSection() {
                     </div>
 
                     <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 group-hover:text-white group-hover:bg-indigo-600 group-hover:border-indigo-500/30 transition-all duration-300 shadow-md shrink-0">
-                      <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 rtl:group-hover:-translate-x-0.5" />
+                      <ArrowUpRight className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-300 ${isRtl ? "-scale-x-100 group-hover:-translate-x-0.5 group-hover:-translate-y-0.5" : "group-hover:translate-x-0.5 group-hover:-translate-y-0.5"}`} />
                     </div>
                   </div>
                 </NavLink>
@@ -189,7 +194,7 @@ export default function PortfolioSection() {
         </motion.div>
       </main>
 
-      <Footer />
+      {showNavigation && <Footer />}
     </div>
   );
 }

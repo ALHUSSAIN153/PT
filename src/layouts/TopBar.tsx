@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Bell, Search, Mail, User, Settings, LogOut, Globe, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+// استيراد الصورة الشخصية برمجياً عبر Vite
+import img1 from "/2.jpg";
+
 interface TopBarProps {
   role: 'admin' | 'client';
 }
@@ -38,10 +41,18 @@ export const TopBar: React.FC<TopBarProps> = ({ role }) => {
     setActiveDropdown(null);
   };
 
+  // معالجة مسار صورة الأفاتار للبدء بالـ BASE_URL في حال كانت مساراً نصياً
+  const avatarSrc = typeof img1 === 'string' && img1.startsWith('/')
+    ? `${import.meta.env.BASE_URL}${img1.slice(1)}`
+    : img1;
+
+  // تحديد مسار اللوجو ديناميكياً مع دعم GitHub Pages Base URL
+  const logoSrc = `${import.meta.env.BASE_URL}${role === 'admin' ? '2.png' : '3.png'}`;
+
   const userData = {
     name: role === 'admin' ? t('layouts.TopBar.demoAdmin') : t('layouts.TopBar.demoClient'),
     username: role === 'admin' ? '@admin' : '@client',
-    avatar: '/2.jpg',
+    avatar: avatarSrc,
   };
 
   const messages = role === 'admin' ? [
@@ -69,7 +80,7 @@ export const TopBar: React.FC<TopBarProps> = ({ role }) => {
       {/* الشعار */}
       <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-full shrink-0 flex items-center justify-center p-0.5 border border-zinc-800">
         <img
-          src={role === 'admin' ? "/2.png" : "/3.png"}
+          src={logoSrc}
           alt={role}
           className="w-full h-full object-cover rounded-full"
         />
