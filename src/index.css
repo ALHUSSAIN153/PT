@@ -1,0 +1,49 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+@import "tailwindcss";
+
+
+body {
+  background-color: black;
+  margin: 0;
+  padding: 0;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #818080;
+  border-radius: 10px;
+  height: 20%;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #424242;
+}
+::-webkit-scrollbar-track {
+  background: none;
+}
+
+@theme {
+  --animate-scroll: scroll linear infinite;
+  --animate-scrollReverse: scrollReverse linear infinite;
+
+  @keyframes scroll {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes scrollReverse {
+    from {
+      transform: translateX(-50%);
+    }
+
+    to {
+      transform: translateX(0);
+    }
+  }
+}
